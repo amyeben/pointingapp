@@ -1,0 +1,40 @@
+[
+    {
+        "id": 1,
+        "name": "Test",
+        "family_name": "User",
+        "username": "test",
+        "password": "test"
+    },
+    {
+        "id": 2,
+        "name": "Amy",
+        "family_name": "Eben",
+        "username": "amy@groupeoctopus.fr",
+        "password": "octopus"
+    },
+
+    {
+        "id": 3,
+        "name": "Sophie",
+        "family_name": "Eben",
+        "username": "sophie@groupeoctopus.fr",
+        "password": "octopus"
+    },
+
+    {
+        "id": 4,
+        "name": "Seyma",
+        "family_name": "Tasdemir",
+        "username": "seyma@groupeoctopus.fr",
+        "password": "octopus"
+    },
+
+    {
+        "id": 5,
+        "name": "Delil",
+        "family_name": "Korkmaz",
+        "username": "delil@groupeoctopus.fr",
+        "password": "octopus"
+    }
+]

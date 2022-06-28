@@ -1,0 +1,26 @@
+.container {
+    font-style: normal;
+    font-weight: 200;
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+.myarrivals {
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 32px;
+    letter-spacing: -0.02em;
+
+}
+
+.blue > p {
+    background: rgba(136, 138, 162, 0.28);
+    backdrop-filter: blur(20px);
+    border-radius: 23px;
+    margin-left: 50px;
+    margin-right: 80px;
+    text-align: center;
+
+    padding-top: 250px;
+    padding-bottom: 250px;
+}

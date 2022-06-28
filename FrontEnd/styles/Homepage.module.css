@@ -1,0 +1,138 @@
+.container {
+    font-style: normal;
+    font-weight: 200;
+    margin-left: 30px;
+}
+
+.tabdebord {
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 32px;
+    letter-spacing: -0.02em;
+
+}
+
+.pointeblue {
+    background: rgba(136, 138, 162, 0.28);
+    backdrop-filter: blur(20px);
+    border-radius: 23px;
+    margin-left: 50px;
+    margin-right: 80px;
+    text-align: center;
+
+}
+
+.pointeblue > button {
+    background: #FFFFFF;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 51px;
+    border: hidden;
+    padding: 6px;
+    padding-left: 80px;
+    padding-right: 80px;
+    margin-top: 13px;
+    margin-bottom: 13px;
+    margin-right: 80px;
+    margin-left: 80px;
+    font-size: 18px;
+    font-weight: 100;
+    color: #0B0033;
+
+}
+
+.pointeblue > button:hover {
+    box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.35);
+}
+
+.arrdep {
+    display: flex;
+
+
+}
+
+.arrcol > table{
+    font-size: 12px;
+    padding: 3px;
+    text-align: center;
+    background-color: white;
+    line-height: 20px;
+    border-radius: 23px;
+
+}
+
+.arrcol {
+    background: rgba(136, 138, 162, 0.28);
+    backdrop-filter: blur(4px);
+    /* Note: backdrop-filter has minimal browser support */
+    padding: 20px;
+    padding-left: 50px;
+    padding-right: 50px;
+    border-radius: 23px;
+}
+
+.arrcol > h3 {
+   padding-bottom: 47px;
+    padding-top: 45px;
+    border-radius: 23px;
+    background: white;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+
+.depcol > h3 {
+    padding-bottom: 47px;
+    padding-top: 45px;
+    border-radius: 23px;
+    background: white;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+.depcol {
+    background: rgba(136, 138, 162, 0.28);
+    backdrop-filter: blur(4px);
+    /* Note: backdrop-filter has minimal browser support */
+    padding: 20px;
+    padding-left: 50px;
+    padding-right: 50px;
+    border-radius: 23px;
+
+}
+
+.dep {
+    margin-right: 80px;
+    margin-left: 20px;
+}
+
+.arr {
+    margin-left: 50px;
+    margin-right: 20px;
+
+
+}
+
+.arrdep > div {
+width: 100%;
+
+
+}
+
+
+.avertissements > div > p{
+    background: rgba(136, 138, 162, 0.28);
+    backdrop-filter: blur(20px);
+    border-radius: 23px;
+    margin-left: 50px;
+    margin-right: 80px;
+    text-align: center;
+
+    padding-top: 35px;
+    padding-bottom: 35px;
+}
+
+.avertissements > p {
+    margin-left: 50px;
+    margin-top: 50px;
+}
+

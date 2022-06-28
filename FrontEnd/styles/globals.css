@@ -1,0 +1,32 @@
+.app-container {
+    min-height: 350px;
+}
+
+html,
+body {
+    padding: 0;
+    margin: 0;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    background: linear-gradient(131.1deg, #F9FAFD 8.46%, #F6F7FB 73.3%);
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+button {
+    cursor: pointer;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.popup-overlay {
+    background-color: rgba(0,0,0, 0.5);
+    backdrop-filter: blur(8px);
+}

@@ -1,0 +1,73 @@
+.container {
+    padding: 0 0rem;
+    background: linear-gradient(131.1deg, #F9FAFD 8.46%, #F6F7FB 73.3%);
+
+}
+
+.main {
+    min-height: 100vh;
+    padding: 4rem 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.form-pass{
+    text-align: center;
+}
+
+.input {
+    padding: 5px;
+    text-align: center;
+    padding-bottom: 8px;
+    padding-top: 8px;
+    border: hidden;
+    margin-bottom: 8px;
+    display: inline-block;
+    background: rgba(229, 229, 229, 0.45);
+    box-shadow: inset 1px 0px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 33px;
+    font-size: 20px;
+    font-weight: 300;
+    line-height: 29px;
+    letter-spacing: 0em;
+}
+
+.connexion {
+    margin-top: 15px;
+    background: #A8B5D3;
+    box-shadow: 1px 9px 7px rgba(0, 0, 0, 0.11);
+    border: hidden;
+    border-radius: 37px;
+    color: white;
+    font-size: 20px;
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-top: 5px;
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+}
+
+.connexion:hover {
+    margin-top: 15px;
+    background: #A8B5D3;
+    box-shadow: 1px 10px 7px rgba(0, 0, 0, 0.20);
+    border: hidden;
+    border-radius: 37px;
+    color: white;
+    font-size: 20px;
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-top: 5px;
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+
+}
+
+.spanerror{
+    font-style: italic;
+    color: red;
+}
