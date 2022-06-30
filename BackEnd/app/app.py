@@ -59,7 +59,9 @@ async def add_user(user: NewUsers):
     return {"message": "User added successfully"}
 
 
-@app.post("/add_resum", summary="")
+
+
+@app.post("/add_resum", summary="Summary of the arrival time and departure time for each user")
 async def add_resum(resum: NewResum, user_id):
     """
     Summarize the arrival time and departure time of each user per day.
@@ -90,17 +92,70 @@ async def add_resum(resum: NewResum, user_id):
 
 
 @app.post("/arrival_time")
-async def arrival_time(arr: NewArrivaltime, arrivaltime, user_id, date, comment):
+async def arrival_time(user_id, date, arrivaltime, comment):
+    comment_list=[]
     new_arr = Arrivaltime(user_id=user_id,
                           date=date,
                           arrivaltime=arrivaltime,
                           comment=comment)
     new_arr.save()
 
+    new_dep = Departuretime(user_id=user_id,
+                            date=date,
+                            departuretime="",
+                            comment="")
+    new_dep.save()
+
+    comment_list.append(comment)
+    new_resum = Resum(user_id=user_id,
+                      date=date,
+                      arrivaltime=arrivaltime,
+                      departuretime="",
+                      comment=comment_list)
+
+    new_resum.save()
+
+    new_arr_dict = {
+        "user_id": new_arr.user_id,
+        "date": new_arr.date,
+        "arrivaltime": new_arr.arrivaltime,
+        "comment": new_arr.comment
+    }
+    return new_arr_dict
+
 
 @app.post("/departure_time")
-async def departure_time(dep: NewDeparturetime, departure_time):
-    return departure_time
+async def departure_time(user_id, date, departuretime, comment):
+    comment_list = []
+    arr = Arrivaltime.objects.get(user_id=user_id, date=date)
+    comment_list.append(arr.comment)
+
+    dep = Departuretime.objects.get(user_id=user_id, date=date)
+    dep.update(set__departuretime=departuretime)
+    dep.update(set__comment=comment)
+
+    resum = Resum.objects.get(user_id=user_id, date=date)
+    resum.update(set__departuretime=departuretime)
+    comment_list.append(comment)
+    resum.update(set__comment=comment_list)
+
+    new_dep_dict = {
+        "user_id": dep.user_id,
+        "date": dep.date,
+        "departuretime": dep.departuretime,
+        "comment": dep.comment
+    }
+
+    return new_dep_dict
+
+
+@app.post("/update", summary="Example of how can I update a variable")
+async def update(user_id, comment):
+    arrivaltime = Arrivaltime.objects.get(user_id=user_id)
+    arrivaltime.update(set__comment=comment)
+    arrivaltime_list = json.loads(arrivaltime.to_json())
+
+    return arrivaltime_list
 
 
 @app.post("/user")

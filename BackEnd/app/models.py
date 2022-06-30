@@ -25,7 +25,7 @@ class Resum(Document):
     date = StringField()
     arrivaltime = StringField()
     departuretime = StringField()
-    comment = StringField()
+    comment = ListField()
 
 
 class NewResum(BaseModel):
@@ -33,7 +33,7 @@ class NewResum(BaseModel):
     date: str
     arrivaltime: str
     departuretime: str
-    comment: str
+    comment: list
 
     class Config:
         arbitrary_types_allowed = True
