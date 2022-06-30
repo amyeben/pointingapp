@@ -39,12 +39,7 @@ app.add_middleware(
 
 #####################CLASSES
 
-class NewUsers(BaseModel):
-    usr_id: int
-    name: str
-    family_name: str
-    email: str
-    password: str
+
 
 
 class Login(BaseModel):
@@ -112,16 +107,15 @@ def get_password_hash(password):
     return pwd_context.hash(password)
 
 
-@app.post("/sign_up")
-async def sign_up(users: NewUsers):
-    new_users = Users(usr_id=users.usr_id,
-                      name=users.name,
-                      family_name=users.family_name,
-                      email=users.email,
-                      password=get_password_hash(users.password))
-    new_users.save()
+#@app.post("/sign_up")
+#async def sign_up(users: NewUsers):
+    #new_users = Users(usr_id=users.usr_id,
+     #                 name=users.name,
+      #                family_name=users.family_name,
+       ##              password=get_password_hash(users.password))
+    #new_users.save()
 
-    return {"message": "User added successfully"}
+    #return {"message": "User added successfully"}
 
 
 def authenticate_user(email, password):
