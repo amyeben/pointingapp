@@ -24,7 +24,11 @@ origins = [
     "http://localhost:8000/add_user",
     "http://localhost:8000/add_resum",
     "http://localhost:8000/token",
-    "http://localhost:8000/search_users"
+    "http://localhost:8000/search_users",
+    "http://localhost:8000/ha",
+    "http://localhost:8000/hd",
+    "http://localhost:8000/ha/comment",
+    "http://localhost:8000/hd/comment"
 ]
 
 app = FastAPI()
@@ -59,8 +63,6 @@ async def add_user(user: NewUsers):
     return {"message": "User added successfully"}
 
 
-
-
 @app.post("/add_resum", summary="Summary of the arrival time and departure time for each user")
 async def add_resum(resum: NewResum, user_id):
     """
@@ -93,7 +95,7 @@ async def add_resum(resum: NewResum, user_id):
 
 @app.post("/arrival_time")
 async def arrival_time(user_id, date, arrivaltime, comment):
-    comment_list=[]
+    comment_list = []
     new_arr = Arrivaltime(user_id=user_id,
                           date=date,
                           arrivaltime=arrivaltime,
@@ -142,8 +144,8 @@ async def departure_time(user_id, date, departuretime, comment):
     new_dep_dict = {
         "user_id": dep.user_id,
         "date": dep.date,
-        "departuretime": dep.departuretime,
-        "comment": dep.comment
+        "departuretime": departuretime,
+        "comment": comment
     }
 
     return new_dep_dict
@@ -158,6 +160,34 @@ async def update(user_id, comment):
     return arrivaltime_list
 
 
-@app.post("/user")
-async def user():
-    return {"The user active is": "hahhahhahha"}
+@app.post("/ha")
+async def get_ha(ha: dict):
+    print(ha)
+    ha_c = convert_hour(ha)
+    return ha_c
+
+
+@app.post("/ha/comment")
+async def get_ha_comment(comment: dict):
+    return comment["comment"]
+
+
+@app.post("/hd")
+async def get_hd(hd: dict):
+    print(hd)
+    hd_c = convert_hour(hd)
+    return hd_c
+
+
+@app.post("/hd/comment")
+async def get_hd_comment(comment: dict):
+    return comment["comment"]
+
+
+def convert_hour(str_hour: dict):
+    date_time_str = str_hour["data"]
+    date_time_obj = datetime.strptime(date_time_str, '%H : %M')
+
+    print("The type of the date is now", type(date_time_obj))
+    print("The date is", date_time_obj.time())
+    return date_time_obj.time()

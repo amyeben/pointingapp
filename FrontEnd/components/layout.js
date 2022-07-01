@@ -41,7 +41,6 @@ export default function Layout({ children }) {
                 <title>Bienvenue sur le site de pointage !</title>
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
             </Head>
-            <Script src="/datedujour.js" />
         <div className={styles.wrapper}>
             <nav className={styles.navblue}>
                 <div className={styles.logo}><NavLink href="/"><Image
