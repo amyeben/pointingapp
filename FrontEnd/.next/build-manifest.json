@@ -30,11 +30,6 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/posts/chatbox": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/posts/chatbox.js"
-    ],
     "/posts/pointingpage": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",

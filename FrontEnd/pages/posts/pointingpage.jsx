@@ -7,15 +7,20 @@ import axios from 'axios'
 import {useState} from "react";
 import ArrivaltimeComponent from "../../components/ArrivaltimeComponent";
 import DeparturetimeComponent from "../../components/DeparturetimeComponent";
+import ArrivaltimeCompleted from "../../components/ArrivaltimeCompleted";
+import React from 'react';
+import ReactDOM from "react-dom";
 
 
 export default function Pointingpage() {
+
+
     return (<>
         <Layout>
             <div className={styles.container}>
-                <p className={styles.pointagehoraire}>Pointage Horaire</p>
+                <p className={styles.pointagehoraire} >Pointage Horaire</p>
                 <div className={styles.blue}>
-                    <ArrivaltimeComponent/>
+                   <ArrivaltimeComponent/>
                     <DeparturetimeComponent/>
                 </div>
             </div>

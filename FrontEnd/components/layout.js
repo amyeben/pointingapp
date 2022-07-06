@@ -14,7 +14,7 @@ import Popup from 'reactjs-popup';
 
 export default function Layout({ children }) {
     let date = new Date();
-    let datedujour = ("0" + (date.getDate())).slice(-2)+'/'+("0" + (date.getMonth())).slice(-2)+'/'+date.getFullYear();
+    let datedujour = ("0" + (date.getDate())).slice(-2)+'/'+("0" + (date.getMonth()+1)).slice(-2)+'/'+date.getFullYear();
 
     const [user, setUser] = useState(null);
 

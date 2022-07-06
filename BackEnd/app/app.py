@@ -1,9 +1,11 @@
 import json
+import array
 from typing import List, Union
-
+import time
+import datetime
 from fastapi import Depends, FastAPI, HTTPException, Security, status
 from datetime import datetime, time, timedelta
-
+from time import strftime
 from pydantic import BaseModel, EmailStr
 from fastapi.responses import JSONResponse
 from mongoengine import connect
@@ -13,22 +15,23 @@ from mongoengine import Document, StringField, IntField, ListField, EmailField, 
     ObjectIdField, UUIDField, DateTimeField, EmbeddedDocument, EmbeddedDocumentField
 from pydantic import BaseModel, Field
 from models import Users, NewUsers, Resum, NewResum, Arrivaltime, NewArrivaltime, Departuretime, NewDeparturetime
+from server import users
 
 origins = [
     "http://localhost:3000",
     "http://localhost:8000/",
-    "http://localhost:8000/helloword",
-    "http://localhost:8000/users/me/",
-    "http://localhost:8000/users/me/items/",
-    "http://localhost:8000/get_users/{usr_id}",
+    "http://localhost:8000/get_users/",
     "http://localhost:8000/add_user",
     "http://localhost:8000/add_resum",
-    "http://localhost:8000/token",
     "http://localhost:8000/search_users",
     "http://localhost:8000/ha",
     "http://localhost:8000/hd",
     "http://localhost:8000/ha/comment",
-    "http://localhost:8000/hd/comment"
+    "http://localhost:8000/hd/comment",
+    "http://localhost:8000/date",
+    "http://localhost:8000/get_user",
+    "http://localhost:8000/user_id",
+    "http://localhost:8000/arrival_time"
 ]
 
 app = FastAPI()
@@ -94,24 +97,31 @@ async def add_resum(resum: NewResum, user_id):
 
 
 @app.post("/arrival_time")
-async def arrival_time(user_id, date, arrivaltime, comment):
+async def arrival_time(user_id: dict, date: dict, arrivaltime: dict, comment: dict):
     comment_list = []
-    new_arr = Arrivaltime(user_id=user_id,
-                          date=date,
-                          arrivaltime=arrivaltime,
-                          comment=comment)
+
+    arrival = Arrivaltime.objects(date=date["date"])
+    if arrival:
+        arrival = json.loads(arrival.to_json())
+        print(arrival[0])
+        return arrival[0]
+
+    new_arr = Arrivaltime(user_id=user_id["user_id"],
+                          date=date["date"],
+                          arrivaltime=arrivaltime["arrivaltime"],
+                          comment=comment["comment"])
     new_arr.save()
 
-    new_dep = Departuretime(user_id=user_id,
-                            date=date,
+    new_dep = Departuretime(user_id=user_id["user_id"],
+                            date=date["date"],
                             departuretime="",
                             comment="")
     new_dep.save()
 
-    comment_list.append(comment)
-    new_resum = Resum(user_id=user_id,
-                      date=date,
-                      arrivaltime=arrivaltime,
+    comment_list.append(comment["comment"])
+    new_resum = Resum(user_id=user_id["user_id"],
+                      date=date["date"],
+                      arrivaltime=arrivaltime["arrivaltime"],
                       departuretime="",
                       comment=comment_list)
 
@@ -170,6 +180,17 @@ async def get_ha(ha: dict):
 @app.post("/ha/comment")
 async def get_ha_comment(comment: dict):
     return comment["comment"]
+
+
+@app.post("/user_id")
+async def get_user(username: dict):
+    user_id = users.get_user_id(username["name"])
+    return user_id
+
+
+@app.post("/date")
+async def get_date():
+    return datetime.today().strftime('%d/%m/%Y')
 
 
 @app.post("/hd")

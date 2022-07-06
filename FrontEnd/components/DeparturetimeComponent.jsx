@@ -4,7 +4,6 @@ import axios from "axios";
 
 export default function DeparturetimeComponent() {
     let date = new Date();
-    date.setMinutes(date.getMinutes() - 5);
     let heure = ("0" + (date.getHours())).slice(-2);
     let minutes = ("0" + (date.getMinutes())).slice(-2);
     var time = heure + " : " + minutes ;

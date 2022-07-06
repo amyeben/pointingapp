@@ -55,6 +55,7 @@ class NewArrivaltime(BaseModel):
     class Config:
         arbitrary_types_allowed = True
 
+
 class Departuretime(Document):
     user_id = StringField()
     date = StringField()

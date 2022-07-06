@@ -1,6 +1,11 @@
 import styles from "../styles/Pointingpage.module.css";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
+import {userService} from "../services";
+import Layout from "./layout";
+import Popup from 'reactjs-popup';
+
+
 
 export default function ArrivaltimeComponent() {
 
@@ -12,12 +17,33 @@ export default function ArrivaltimeComponent() {
     var data = {
         "data" : time
     };
-
     const [commentArrival, setCommentArrival] = useState('') ;
+    const [user, setUser] = useState('');
+    const [arrivalTimePopup, setArrivalTimePopup] = useState('');
+
+    useEffect(() => {
+        const subscription = userService.user.subscribe(x => setUser(x));
+        return () => subscription.unsubscribe();
+    }, []);
+
+    function logout() {
+        userService.logout();
+    }
+
+    // only show nav when logged in
+    if (!user) return null;
+
+
 
     var comment = {
         "comment" : commentArrival
     };
+
+    var nameuser = user.name
+
+    var name = {
+        "name" : nameuser
+    }
 
     const arrivalTime = (e) => {
         e.preventDefault();
@@ -28,24 +54,71 @@ export default function ArrivaltimeComponent() {
             minutes = ("0" + (date.getMinutes())).slice(-2);
             time = heure + ":" + minutes + ":00";
             console.log(res.data);
-            console.log(time);
+            //console.log(time);
         }
 
         const handleSuccessComment = (res) => { // if success
+            console.log(res.data)
+            return res.data
+        }
+
+        const handleSuccessDate = (res) => { // if success
             console.log(res.data);
+        }
+
+        const handleSuccessUserId = (res) => { // if success
+            console.log(res.data);
+        }
+
+
+
+        const handleSuccess = (res) => { // if success
+
+            console.log(res.data);
+            setArrivalTimePopup(res.data.arrivaltime)
+            //alert("Vous êtes arrivée à " + res.data.arrivaltime)
         }
 
         const handleFailure = (error) => {
             console.log("ERROR");
         }
 
-        axios.post(`http://localhost:8000/ha`, data)
-            .then(handleSuccessData)
-            .catch(handleFailure)
+        function getData() { return axios.post(`http://localhost:8000/ha`, data)}
+            //.then(handleSuccessData)
+            //.catch(handleFailure)}
 
-        axios.post(`http://localhost:8000/ha/comment`, comment)
-            .then(handleSuccessComment)
-            .catch(handleFailure)
+        function getComment() { return axios.post(`http://localhost:8000/ha/comment`, comment)}
+            //.then(handleSuccessComment)
+            //.catch(handleFailure)}
+
+        function getDate() { return axios.post(`http://localhost:8000/date`)}
+            //.then(handleSuccessDate)
+            //.catch(handleFailure)}
+
+        function getUserId() { return axios.post(`http://localhost:8000/user_id`, name)}
+            //.then(handleSuccessUserId)
+            //.catch(handleFailure)}
+
+        Promise.all([getUserId(), getDate(), getData(), getComment()])
+            .then(function (results) {
+                var user_id = {
+                    "user_id" : results[0].data.toString()
+                } ;
+                var date = {
+                    "date" : results[1].data.toString()
+                };
+                var arrivaltime = {
+                    "arrivaltime" : results[2].data.toString()
+                };
+                var comment = {
+                    "comment" : results[3].data.toString()
+                };
+
+                axios.post(`http://localhost:8000/arrival_time`, {user_id, date, arrivaltime, comment})
+                    .then(handleSuccess)
+                    .catch(handleFailure)
+            });
+
 
     }
 
@@ -56,8 +129,73 @@ export default function ArrivaltimeComponent() {
                 <label>{heure} : {minutes}</label><br/><br/>
                 <input value={commentArrival} type={"text"} placeholder={"Commentaires..."} size={(90)} className={styles.input} onChange={(e) => setCommentArrival(e.target.value) }/><br/>
             </div>
-            <input name={"ptnarriver"} type={"submit"} value={"Pointer mon arrivée"} className={styles.ptnarr}/>
+            <Popup
+                trigger={<input name={"ptnarriver"} type={"submit"} value={"Pointer mon arrivée"} className={styles.ptnarr}/>}
+                modal
+                nested
+            >
+                {close => (
+                    <div className="modal">
+                        <button className="close" onClick={close}>
+                            &times;
+                        </button>
+                        <div className="header"> <p> HEURE D'ARRIVÉE </p></div>
+                        <div className="content">
+                            {' '}
+                            <p>{nameuser}, vous êtes arrivée à : <strong>{arrivalTimePopup}</strong>.<br/>
+
+                            </p>
+                            <br />
+                        </div>
+                    </div>
+                )}
+            </Popup>
 
         </form>
+        <style jsx>
+            {`.modal {
+  font-size: 12px;
+  background: white;
+  padding: 30px;
+  border-radius: 30px;
+  margin-left: 600px;
+  margin-right: 600px;
+  box-shadow: 1px 1px 12px #555;
+  font-family: 'Be Vietnam Pro';
+  font-weight: 150;
+}
+
+.modal > .header {
+  width: 100%;
+  border-bottom: 1px solid gray;
+  font-size: 18px;
+  text-align: center;
+  padding: 5px;
+  padding-left: 100px;
+  padding-right: 100px;
+}
+.modal > .content {
+  padding: 10px 5px;
+  text-align: center;
+}
+.modal > .actions {
+  padding: 10px 5px;
+  margin: auto;
+  text-align: center;
+}
+.modal > .close {
+  cursor: pointer;
+  position: absolute;
+  display: block;
+  line-height: 20px;
+  font-size: 24px;
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid #cfcece;
+  padding-bottom: 4px;
+}
+
+`}
+        </style>
     </>)
 }
