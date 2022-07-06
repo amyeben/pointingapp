@@ -31,7 +31,8 @@ origins = [
     "http://localhost:8000/date",
     "http://localhost:8000/get_user",
     "http://localhost:8000/user_id",
-    "http://localhost:8000/arrival_time"
+    "http://localhost:8000/arrival_time",
+    "http://localhost:8000/departure_time"
 ]
 
 app = FastAPI()
@@ -70,7 +71,7 @@ async def add_user(user: NewUsers):
 async def add_resum(resum: NewResum, user_id):
     """
     Summarize the arrival time and departure time of each user per day.
-    Called by the **departure_time** function.
+    Called by the **arrival_time** function, and updated by the **departure_time** function.
 
     - **resum**: instance of the NewResum class
     - **user_id**: correspond to an user
@@ -96,11 +97,22 @@ async def add_resum(resum: NewResum, user_id):
     return resum_dic
 
 
-@app.post("/arrival_time")
+@app.post("/arrival_time", summary="Add an arrival time document")
 async def arrival_time(user_id: dict, date: dict, arrivaltime: dict, comment: dict):
+    """
+    Add an arrival time document, with the following information :
+
+        - **user_id**: the user_id build with the /user_id endpoint
+        - **date**: the date of the day build with the /date endpoint
+        - **arrivaltime**: the arrival time build with the /ha endpoint
+        - **comment**: a comment gived by the user and build with the /ha/comment endoint
+
+        First, it checks if a document with the same date already exists.
+        In this case, it returns the previously created document.
+    """
     comment_list = []
 
-    arrival = Arrivaltime.objects(date=date["date"])
+    arrival = Arrivaltime.objects(date=date["date"], user_id=user_id["user_id"])
     if arrival:
         arrival = json.loads(arrival.to_json())
         print(arrival[0])
@@ -137,25 +149,33 @@ async def arrival_time(user_id: dict, date: dict, arrivaltime: dict, comment: di
 
 
 @app.post("/departure_time")
-async def departure_time(user_id, date, departuretime, comment):
+async def departure_time(user_id: dict, date: dict, departuretime: dict, comment: dict):
     comment_list = []
-    arr = Arrivaltime.objects.get(user_id=user_id, date=date)
+
+    departure = Departuretime.objects(departuretime="", user_id=user_id["user_id"])
+    if not departure:
+        departure = Departuretime.objects(date=date["date"])
+        departure = json.loads(departure.to_json())
+        print(departure[0])
+        return departure[0]
+
+    arr = Arrivaltime.objects.get(user_id=user_id["user_id"], date=date["date"])
     comment_list.append(arr.comment)
 
-    dep = Departuretime.objects.get(user_id=user_id, date=date)
-    dep.update(set__departuretime=departuretime)
-    dep.update(set__comment=comment)
+    dep = Departuretime.objects.get(user_id=user_id["user_id"], date=date["date"])
+    dep.update(set__departuretime=departuretime["departuretime"])
+    dep.update(set__comment=comment["comment"])
 
-    resum = Resum.objects.get(user_id=user_id, date=date)
-    resum.update(set__departuretime=departuretime)
-    comment_list.append(comment)
+    resum = Resum.objects.get(user_id=user_id["user_id"], date=date["date"])
+    resum.update(set__departuretime=departuretime["departuretime"])
+    comment_list.append(comment["comment"])
     resum.update(set__comment=comment_list)
 
     new_dep_dict = {
         "user_id": dep.user_id,
         "date": dep.date,
-        "departuretime": departuretime,
-        "comment": comment
+        "departuretime": departuretime["departuretime"],
+        "comment": comment["comment"]
     }
 
     return new_dep_dict

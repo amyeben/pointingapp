@@ -22,8 +22,20 @@ export default function Pointingpage() {
                 <div className={styles.blue}>
                    <ArrivaltimeComponent/>
                     <DeparturetimeComponent/>
+                    <p className={"cas"}>En cas de soucis, au niveau des saisies referrez-vous au Pôle RH ou à votre responsable.</p>
                 </div>
             </div>
         </Layout>
+        <style jsx>
+            {`.cas {
+                text-align: center;
+                font-size: 12px;
+                color: darkred;
+                font-weight: 150;
+                text-shadow: black 0.05em 0.05em 0.05em;
+                padding-bottom: 20px;
+                
+}`}
+        </style>
     </>)
 }

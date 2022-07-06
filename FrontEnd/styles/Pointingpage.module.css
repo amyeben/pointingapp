@@ -84,3 +84,14 @@
     padding-top: 1px;
 
 }
+
+
+.hidden {
+    opacity: 0;
+    height: 0;
+}
+
+.content {
+    padding: 10px 5px;
+    text-align: center;
+}

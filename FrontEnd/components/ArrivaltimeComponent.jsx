@@ -20,6 +20,14 @@ export default function ArrivaltimeComponent() {
     const [commentArrival, setCommentArrival] = useState('') ;
     const [user, setUser] = useState('');
     const [arrivalTimePopup, setArrivalTimePopup] = useState('');
+    const [commentPopup, setCommentPopup] = useState('');
+    const [isComment, setIsComment] = useState(false);
+
+    const REGEXP = /^$/;
+
+    const validate = (text) => {
+        return REGEXP.test(text);
+    }
 
     useEffect(() => {
         const subscription = userService.user.subscribe(x => setUser(x));
@@ -77,6 +85,13 @@ export default function ArrivaltimeComponent() {
             console.log(res.data);
             setArrivalTimePopup(res.data.arrivaltime)
             //alert("Vous êtes arrivée à " + res.data.arrivaltime)
+            console.log(res.data.comment)
+            const isEmpty = validate(res.data.comment)
+            if (!isEmpty) {
+                setCommentPopup(res.data.comment)
+                setIsComment(true)
+            }
+
         }
 
         const handleFailure = (error) => {
@@ -142,10 +157,9 @@ export default function ArrivaltimeComponent() {
                         <div className="header"> <p> HEURE D'ARRIVÉE </p></div>
                         <div className="content">
                             {' '}
-                            <p>{nameuser}, vous êtes arrivée à : <strong>{arrivalTimePopup}</strong>.<br/>
+                            <p><strong>{nameuser}</strong>, vous êtes arrivée à : <strong>{arrivalTimePopup}</strong>.<br/></p>
+                                <p className={isComment ? styles.content : styles.hidden}>Votre commentaire : "<strong>{commentPopup}</strong>" a bien été envoyé. </p>
 
-                            </p>
-                            <br />
                         </div>
                     </div>
                 )}
@@ -193,6 +207,11 @@ export default function ArrivaltimeComponent() {
   border-radius: 18px;
   border: 1px solid #cfcece;
   padding-bottom: 4px;
+}
+
+.hidden {
+    opacity: 0;
+    height: 0;
 }
 
 `}
