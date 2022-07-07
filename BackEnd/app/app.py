@@ -16,6 +16,7 @@ from mongoengine import Document, StringField, IntField, ListField, EmailField, 
 from pydantic import BaseModel, Field
 from models import Users, NewUsers, Resum, NewResum, Arrivaltime, NewArrivaltime, Departuretime, NewDeparturetime
 from server import users
+import asyncio
 
 origins = [
     "http://localhost:3000",
@@ -32,7 +33,9 @@ origins = [
     "http://localhost:8000/get_user",
     "http://localhost:8000/user_id",
     "http://localhost:8000/arrival_time",
-    "http://localhost:8000/departure_time"
+    "http://localhost:8000/departure_time",
+    "http://localhost:8000/get_all_myarrivals",
+    "http://localhost:8000/get_all_date"
 ]
 
 app = FastAPI()
@@ -67,7 +70,7 @@ async def add_user(user: NewUsers):
     return {"message": "User added successfully"}
 
 
-@app.post("/add_resum", summary="Summary of the arrival time and departure time for each user")
+@app.post("/add_resum", summary="Summary of the arrival time and departure time for each user", tags=["Resum"])
 async def add_resum(resum: NewResum, user_id):
     """
     Summarize the arrival time and departure time of each user per day.
@@ -97,26 +100,27 @@ async def add_resum(resum: NewResum, user_id):
     return resum_dic
 
 
-@app.post("/arrival_time", summary="Add an arrival time document")
+@app.post("/arrival_time", summary="Add an arrival time document", tags=["Arrival Time"])
 async def arrival_time(user_id: dict, date: dict, arrivaltime: dict, comment: dict):
     """
     Add an arrival time document, with the following information :
 
-        - **user_id**: the user_id build with the /user_id endpoint
-        - **date**: the date of the day build with the /date endpoint
-        - **arrivaltime**: the arrival time build with the /ha endpoint
-        - **comment**: a comment gived by the user and build with the /ha/comment endoint
+    - **user_id**: the user_id build with the /user_id endpoint
+    - **date**: the date of the day build with the /date endpoint
+    - **arrivaltime**: the arrival time build with the /ha endpoint
+    - **comment**: a comment gived by the user and build with the /ha/comment endoint
 
-        First, it checks if a document with the same date already exists.
-        In this case, it returns the previously created document.
+    First, it checks if a document with the same date already exists.
+    In this case, it returns the previously created document.
     """
     comment_list = []
 
     arrival = Arrivaltime.objects(date=date["date"], user_id=user_id["user_id"])
-    if arrival:
-        arrival = json.loads(arrival.to_json())
-        print(arrival[0])
-        return arrival[0]
+    resum = Resum.objects(date=date["date"], user_id=user_id["user_id"])
+    if arrival or resum:
+        resum = json.loads(resum.to_json())
+        print(resum[0])
+        return resum[0]
 
     new_arr = Arrivaltime(user_id=user_id["user_id"],
                           date=date["date"],
@@ -148,16 +152,28 @@ async def arrival_time(user_id: dict, date: dict, arrivaltime: dict, comment: di
     return new_arr_dict
 
 
-@app.post("/departure_time")
+@app.post("/departure_time", summary="Add a departure time document", tags=["Departure Time"])
 async def departure_time(user_id: dict, date: dict, departuretime: dict, comment: dict):
+    """
+        Add a departure time document, with the following information :
+
+        - **user_id**: the user_id build with the /user_id endpoint
+        - **date**: the date of the day build with the /date endpoint
+        - **arrivaltime**: the arrival time build with the /ha endpoint
+        - **comment**: a comment gived by the user and build with the /ha/comment endoint
+
+        First, it checks if a document where the departuretime field is empty.
+        In this case, it returns the document.
+        """
     comment_list = []
 
     departure = Departuretime.objects(departuretime="", user_id=user_id["user_id"])
-    if not departure:
-        departure = Departuretime.objects(date=date["date"])
-        departure = json.loads(departure.to_json())
-        print(departure[0])
-        return departure[0]
+    resum = Resum.objects(departuretime="", user_id=user_id["user_id"])
+    if not departure or resum:
+        resum = Resum.objects(date=date["date"])
+        resum = json.loads(resum.to_json())
+        print(resum[0])
+        return resum[0]
 
     arr = Arrivaltime.objects.get(user_id=user_id["user_id"], date=date["date"])
     comment_list.append(arr.comment)
@@ -190,45 +206,64 @@ async def update(user_id, comment):
     return arrivaltime_list
 
 
-@app.post("/ha")
+@app.post("/ha", summary="Get the arrival time", tags=["Arrival Time"])
 async def get_ha(ha: dict):
     print(ha)
     ha_c = convert_hour(ha)
     return ha_c
 
 
-@app.post("/ha/comment")
+@app.post("/ha/comment", summary="Get the arrival time : comment", tags=["Arrival Time"])
 async def get_ha_comment(comment: dict):
     return comment["comment"]
 
 
-@app.post("/user_id")
+@app.post("/user_id", summary="Get the user and return an user_id", tags=["All"])
 async def get_user(username: dict):
     user_id = users.get_user_id(username["name"])
     return user_id
 
 
-@app.post("/date")
+@app.post("/date", summary="Get the date", tags=["All"])
 async def get_date():
     return datetime.today().strftime('%d/%m/%Y')
 
 
-@app.post("/hd")
+@app.post("/hd", summary="Get the departure time", tags=["Departure Time"])
 async def get_hd(hd: dict):
     print(hd)
     hd_c = convert_hour(hd)
     return hd_c
 
 
-@app.post("/hd/comment")
+@app.post("/hd/comment", summary="Get the departure time : comment", tags=["Departure Time"])
 async def get_hd_comment(comment: dict):
     return comment["comment"]
 
 
 def convert_hour(str_hour: dict):
+    """
+    Take a dict where is a time as a string element and convert it to a time element.
+
+    :param str_hour: string element, content time
+    :return: converted time
+    """
     date_time_str = str_hour["data"]
     date_time_obj = datetime.strptime(date_time_str, '%H : %M')
 
     print("The type of the date is now", type(date_time_obj))
     print("The date is", date_time_obj.time())
     return date_time_obj.time()
+
+
+@app.post("/get_all_data", summary="Get user's resum from database")
+async def get_all_data(user_id):
+    user = Resum.objects(user_id=user_id)
+    usr = json.loads(user.to_json())
+    return usr
+
+
+@app.post("/get_all_myarrivals", summary="Get all data from database for the `Mes Arrivées` tab")
+async def get_all_date(user_id: dict):
+    await asyncio.sleep(2)
+    return user_id["name"]

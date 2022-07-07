@@ -13,7 +13,7 @@
 
 }
 
-.blue > p {
+.blue  {
     background: rgba(136, 138, 162, 0.28);
     backdrop-filter: blur(20px);
     border-radius: 23px;

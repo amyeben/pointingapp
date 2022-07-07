@@ -7,7 +7,6 @@ import axios from 'axios'
 import {useState} from "react";
 import ArrivaltimeComponent from "../../components/ArrivaltimeComponent";
 import DeparturetimeComponent from "../../components/DeparturetimeComponent";
-import ArrivaltimeCompleted from "../../components/ArrivaltimeCompleted";
 import React from 'react';
 import ReactDOM from "react-dom";
 
