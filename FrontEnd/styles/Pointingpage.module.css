@@ -45,7 +45,7 @@
     padding-left: 80px;
     padding-right: 80px;
     margin-top: 13px;
-    margin-bottom: 13px;
+    margin-bottom: 50px;
     font-size: 18px;
     font-weight: 100;
     color: black;
@@ -70,8 +70,8 @@
 .formdep {
     display: flex;
     flex-direction: column;
-    margin-top: 50px;
-    margin-bottom: 50px;
+    margin-top: 30px;
+    margin-bottom: 10px;
     justify-content: center;
     align-items: center;
 
@@ -82,6 +82,7 @@
     backdrop-filter: blur(20px);
     border-radius: 23px;
     padding-top: 1px;
+
 
 }
 

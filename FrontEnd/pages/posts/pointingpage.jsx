@@ -21,8 +21,8 @@ export default function Pointingpage() {
                 <div className={styles.blue}>
                    <ArrivaltimeComponent/>
                     <DeparturetimeComponent/>
-                    <p className={"cas"}>En cas de soucis, au niveau des saisies referrez-vous au Pôle RH ou à votre responsable.</p>
                 </div>
+                <p className={"cas"}>En cas de soucis, au niveau des saisies referrez-vous au Pôle RH ou à votre responsable.</p>
             </div>
         </Layout>
         <style jsx>

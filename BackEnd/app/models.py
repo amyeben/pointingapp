@@ -71,3 +71,18 @@ class NewDeparturetime(BaseModel):
 
     class Config:
         arbitrary_types_allowed = True
+
+
+class Advertissement(Document):
+    user_id = StringField()
+    date_ad = StringField()
+    message = StringField()
+
+
+class NewAdvertissement(BaseModel):
+    user_id: str
+    date_ad: str
+    message: str
+
+    class Config:
+        arbitrary_types_allowed = True

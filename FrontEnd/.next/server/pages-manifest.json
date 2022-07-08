@@ -2,9 +2,6 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/login": "pages/login.js",
-  "/api/users/authenticate": "pages/api/users/authenticate.js",
-  "/posts/pointingpage": "pages/posts/pointingpage.js",
   "/api/users": "pages/api/users.js",
-  "/": "pages/index.js"
+  "/posts/alert": "pages/posts/alert.js"
 }

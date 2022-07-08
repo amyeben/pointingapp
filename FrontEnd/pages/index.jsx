@@ -7,16 +7,85 @@ import {NavLink} from "../components";
 
 import { userService } from 'services';
 import {useRouter} from "next/router";
+import axios from "axios";
 
 export default Home;
 
 function Home() {
     const [users, setUsers] = useState(null);
     const router = useRouter();
+    const [user, setUser] = useState('');
+    const [isButton, setButton] = useState(true);
+    const [dataLoaded, setDataLoaded] = useState('');
+    const [taBody, setTaBody] = useState('')
 
     useEffect(() => {
         userService.getAll().then(x => setUsers(x));
+        const subscription = userService.user.subscribe(x => setUser(x));
+        return () => subscription.unsubscribe();
+
     }, []);
+
+    function logout() {
+        userService.logout();
+    }
+
+    if (!user) return null;
+
+    var nameuser = user.name;
+
+    var name = {
+        "name" : nameuser
+    }
+
+    const loadData = (e) => {
+        const handleSuccess = (res) => { // if success
+            setButton(false);
+            console.log(dataLoaded);
+            console.log(res.data.length);
+            var ligneHtml = "";
+            var red = "red";
+
+            if (res.data.length > 5){
+                for (let i = 0; i < 5; i++) {
+                    if (res.data[i][4]==0 || res.data[i][4]=='0' ){
+                        red = "green"
+                    }
+                    else { red= "red"}
+                    console.log(res.data[i])
+                    ligneHtml += "<style> .red {color: red}  .green {color: green}</style><tr class="+red+"><td>"+res.data[i][0]+"</td><td>"+res.data[i][1]+"</td><td>"+res.data[i][2]+"</td></tr>"
+                }
+                console.log("ok");
+                setTaBody(ligneHtml)
+                console.log("ok")
+            }
+
+            else {
+                for (let i = 0; i < res.data.length; i++) {
+                    if (res.data[i][4]==0 || res.data[i][4]=='0' ){
+                        red = "green"
+                    }
+                    else { red= "red"}
+                    console.log(res.data[i])
+                    ligneHtml += "<style> .red {color: red}  .green {color: green}</style><tr class="+red+"><td>"+res.data[i][0]+"</td><td>"+res.data[i][1]+"</td><td>"+res.data[i][2]+"</td></tr>"
+                }
+                console.log("ok");
+                setTaBody(ligneHtml)
+                console.log("ok")
+            }
+
+
+
+        }
+
+        const handleFailure = (error) => {
+            console.log("ERROR");
+        }
+
+        axios.post(`http://localhost:8000/get_all_myarrivals`, name)
+            .then(handleSuccess)
+            .catch(handleFailure)
+    }
 
 
 
@@ -34,9 +103,17 @@ function Home() {
                     <div className={styles.arr}>
                         <p>Mes Arrivées</p>
                         <div className={styles.arrcol}>
-                            <h3>
-                                TABLEAU EXEMPLE
-                            </h3>
+                            <button className={isButton ? styles.loadbutton : styles.hidden} onClick={loadData}>CHARGER</button>
+                            <table className={isButton ? styles.hidden : styles.white}>
+                                <thead className={styles.tbody}>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Heure d'Arrivée</th>
+                                    <th>Heure de Départ</th>
+                                </tr>
+                                </thead>
+                                <tbody className={styles.tbody} dangerouslySetInnerHTML={{__html: taBody}}/>
+                            </table>
                         </div>
                     </div>
                     <div className={styles.dep}>
@@ -54,6 +131,7 @@ function Home() {
                 </div>
             </div>
         </Layout>
+
         </>
     );
 }

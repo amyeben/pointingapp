@@ -4,7 +4,7 @@ from typing import List, Union
 import time
 import datetime
 from fastapi import Depends, FastAPI, HTTPException, Security, status
-from datetime import datetime, time, timedelta
+from datetime import datetime, time, timedelta, date
 from time import strftime
 from pydantic import BaseModel, EmailStr
 from fastapi.responses import JSONResponse
@@ -14,7 +14,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from mongoengine import Document, StringField, IntField, ListField, EmailField, BooleanField, ReferenceField, DateField, \
     ObjectIdField, UUIDField, DateTimeField, EmbeddedDocument, EmbeddedDocumentField
 from pydantic import BaseModel, Field
-from models import Users, NewUsers, Resum, NewResum, Arrivaltime, NewArrivaltime, Departuretime, NewDeparturetime
+from models import Users, NewUsers, Resum, NewResum, Arrivaltime, NewArrivaltime, Departuretime, NewDeparturetime, Advertissement, NewAdvertissement
 from server import users
 import asyncio
 
@@ -35,7 +35,8 @@ origins = [
     "http://localhost:8000/arrival_time",
     "http://localhost:8000/departure_time",
     "http://localhost:8000/get_all_myarrivals",
-    "http://localhost:8000/get_all_date"
+    "http://localhost:8000/get_all_date",
+    "http://localhost:8000/get_all_data"
 ]
 
 app = FastAPI()
@@ -47,6 +48,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 connect(db="pointingapp", host="localhost", port=27017)
+time_seven_hours = timedelta(seconds=28800)
 
 
 @app.post("/add_user", summary="Create an user")
@@ -170,7 +172,7 @@ async def departure_time(user_id: dict, date: dict, departuretime: dict, comment
     departure = Departuretime.objects(departuretime="", user_id=user_id["user_id"])
     resum = Resum.objects(departuretime="", user_id=user_id["user_id"])
     if not departure or resum:
-        resum = Resum.objects(date=date["date"])
+        resum = Resum.objects(date=date["date"], user_id=user_id["user_id"])
         resum = json.loads(resum.to_json())
         print(resum[0])
         return resum[0]
@@ -256,14 +258,68 @@ def convert_hour(str_hour: dict):
     return date_time_obj.time()
 
 
-@app.post("/get_all_data", summary="Get user's resum from database")
-async def get_all_data(user_id):
+@app.post("/get_all_myarrivals", summary="Get all data from database for the `Mes Arrivées` page")
+async def get_all_date(username: dict):
+    """
+    Load resum data from the database
+    :param username: the user's name
+    :return: An array who contains every resum's data of a user
+    """
+    tab_all_data = []
+    user_id = users.get_user_id(username["name"])
     user = Resum.objects(user_id=user_id)
     usr = json.loads(user.to_json())
-    return usr
+    indice = 1
+    if len(usr) < 25:
+        for i in range(len(usr)):
+            a = len(usr) - 1
+            if usr[a - i]['departuretime'] != "":
+                val = get_time_passed(user_id, usr[a - i]['date'])
+                print(val)
+                if val < time_seven_hours:
+                    indice = 1
+                else:
+                    indice = 0
+
+            tab = [usr[a - i]['date'], usr[a - i]['arrivaltime'], usr[a - i]['departuretime'], usr[a - i]['comment'],
+                   indice]
+            tab_all_data.append(tab)
+
+    elif len(usr) > 25:
+        for i in range(25):
+            b = len(usr) - 1
+            if usr[b - i]['departuretime'] != "":
+                val = get_time_passed(user_id, usr[b - i]['date'])
+                print(val)
+                if val < time_seven_hours:
+                    indice = 1
+                else:
+                    indice = 0
+
+            tab = [usr[b - i]['date'], usr[b - i]['arrivaltime'], usr[b - i]['departuretime'], usr[b - i]['comment'],
+                   indice]
+            tab_all_data.append(tab)
+        print(tab_all_data)
+    return tab_all_data
 
 
-@app.post("/get_all_myarrivals", summary="Get all data from database for the `Mes Arrivées` tab")
-async def get_all_date(user_id: dict):
-    await asyncio.sleep(2)
-    return user_id["name"]
+def get_time_passed(user_id, date):
+    """
+    Check the time passed at the company, if it is above or note seven hours
+    :param user_id: the user
+    :param date: the date we want to check
+    :return: the time passed at the company
+    """
+    user = Resum.objects(user_id=user_id, date=date)
+    usr = json.loads(user.to_json())
+    arrivaltime_s = usr[0]['arrivaltime']
+    arrivaltime_t = datetime.strptime(arrivaltime_s, '%H:%M:%S')
+    departuretime_s = usr[0]['departuretime']
+    departuretime_t = datetime.strptime(departuretime_s, '%H:%M:%S')
+    start_time = time(arrivaltime_t.time().hour, arrivaltime_t.time().minute, arrivaltime_t.time().second)
+    stop_time = time(departuretime_t.time().hour, departuretime_t.time().minute, departuretime_t.time().second)
+    datet = datetime.today()
+    datetime1 = datetime.combine(datet, start_time)
+    datetime2 = datetime.combine(datet, stop_time)
+    time_passed = datetime2 - datetime1
+    return time_passed

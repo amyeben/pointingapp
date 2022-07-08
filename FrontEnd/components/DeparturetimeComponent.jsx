@@ -69,10 +69,10 @@ export default function DeparturetimeComponent() {
             console.log(res.data);
             setDepartureTimePopup(res.data.departuretime)
             //alert("Vous êtes arrivée à " + res.data.departuretime)
-            console.log(res.data.comment)
-            const isEmpty = validate(res.data.comment)
+            console.log(res.data.comment[1])
+            const isEmpty = validate(res.data.comment[1])
             if (!isEmpty) {
-                setCommentPopup(res.data.comment)
+                setCommentPopup(res.data.comment[1])
                 setIsComment(true)
             }
 
