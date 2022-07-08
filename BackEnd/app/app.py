@@ -14,7 +14,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from mongoengine import Document, StringField, IntField, ListField, EmailField, BooleanField, ReferenceField, DateField, \
     ObjectIdField, UUIDField, DateTimeField, EmbeddedDocument, EmbeddedDocumentField
 from pydantic import BaseModel, Field
-from models import Users, NewUsers, Resum, NewResum, Arrivaltime, NewArrivaltime, Departuretime, NewDeparturetime, Advertissement, NewAdvertissement
+from models import Users, NewUsers, Resum, NewResum, Arrivaltime, NewArrivaltime, Departuretime, NewDeparturetime, \
+    Advertissement, NewAdvertissement
 from server import users
 import asyncio
 
@@ -36,7 +37,9 @@ origins = [
     "http://localhost:8000/departure_time",
     "http://localhost:8000/get_all_myarrivals",
     "http://localhost:8000/get_all_date",
-    "http://localhost:8000/get_all_data"
+    "http://localhost:8000/get_all_data",
+    "http://localhost:8000/get_advertissements",
+    "http://localhost:8000/get_all_advertissements"
 ]
 
 app = FastAPI()
@@ -290,7 +293,7 @@ async def get_all_date(username: dict):
             b = len(usr) - 1
             if usr[b - i]['departuretime'] != "":
                 val = get_time_passed(user_id, usr[b - i]['date'])
-                print(val)
+                # print(val)
                 if val < time_seven_hours:
                     indice = 1
                 else:
@@ -299,8 +302,26 @@ async def get_all_date(username: dict):
             tab = [usr[b - i]['date'], usr[b - i]['arrivaltime'], usr[b - i]['departuretime'], usr[b - i]['comment'],
                    indice]
             tab_all_data.append(tab)
-        print(tab_all_data)
+        # print(tab_all_data)
     return tab_all_data
+
+
+@app.post("/get_advertissements", summary="Get advertissements of user from database")
+async def get_advertissments(username: dict):
+    user_id = users.get_user_id(username['name'])
+    usr_ad = Advertissement.objects(user_id=user_id)
+    usr = json.loads(usr_ad.to_json())
+    if len(usr) == 0:
+        return ""
+    return usr[len(usr) - 1]
+
+
+@app.post("/get_all_advertissements", summary="Get advertissements of user from database")
+async def get_all_advertissments(username: dict):
+    user_id = users.get_user_id(username['name'])
+    usr_ad = Advertissement.objects(user_id=user_id)
+    usr = json.loads(usr_ad.to_json())
+    return usr
 
 
 def get_time_passed(user_id, date):

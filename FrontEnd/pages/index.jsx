@@ -16,8 +16,10 @@ function Home() {
     const router = useRouter();
     const [user, setUser] = useState('');
     const [isButton, setButton] = useState(true);
+    const [isButtonAd, setButtonAd] = useState(true);
     const [dataLoaded, setDataLoaded] = useState('');
-    const [taBody, setTaBody] = useState('')
+    const [taBody, setTaBody] = useState('');
+    const [adContent, setAdContent] = useState('')
 
     useEffect(() => {
         userService.getAll().then(x => setUsers(x));
@@ -38,7 +40,7 @@ function Home() {
         "name" : nameuser
     }
 
-    const loadData = (e) => {
+    const loadDataArrival = (e) => {
         const handleSuccess = (res) => { // if success
             setButton(false);
             console.log(dataLoaded);
@@ -87,6 +89,26 @@ function Home() {
             .catch(handleFailure)
     }
 
+    const loadDataAd  = (e) => {
+        setButtonAd(false);
+
+        const handleSuccess = (res) => { // if success
+                console.log(res.data)
+                if (res.data == ""){setAdContent("Aucun Avertissement")}
+                else {
+                    setAdContent("Écrit le " + res.data['date_ad'] + " : " + res.data['message'])
+                }}
+
+        const handleFailure = (error) => {
+            console.log("ERROR");
+        }
+
+        axios.post(`http://localhost:8000/get_advertissements`, name)
+            .then(handleSuccess)
+            .catch(handleFailure)
+
+    }
+
 
 
     return (
@@ -103,7 +125,7 @@ function Home() {
                     <div className={styles.arr}>
                         <p>Mes Arrivées</p>
                         <div className={styles.arrcol}>
-                            <button className={isButton ? styles.loadbutton : styles.hidden} onClick={loadData}>CHARGER</button>
+                            <button className={isButton ? styles.loadbutton : styles.hidden} onClick={loadDataArrival}>CHARGER</button>
                             <table className={isButton ? styles.hidden : styles.white}>
                                 <thead className={styles.tbody}>
                                 <tr>
@@ -125,8 +147,9 @@ function Home() {
                 </div>
                 <div className={styles.avertissements}>
                     <p>Avertissements</p>
-                    <div>
-                        <p>Aucun Avertissement</p>
+                    <div className={styles.blue}>
+                        <button className={isButtonAd ? styles.loadbutton : styles.hidden} onClick={loadDataAd}>CHARGER</button>
+                        <p className={isButtonAd ? styles.hidden : styles.nothing}>{adContent}</p>
                     </div>
                 </div>
             </div>

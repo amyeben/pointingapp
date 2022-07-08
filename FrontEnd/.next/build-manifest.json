@@ -30,20 +30,30 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
+    "/login": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/login.js"
+    ],
     "/posts/alert": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/posts/alert.js"
+    ],
+    "/posts/chatbox": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/posts/chatbox.js"
     ],
     "/posts/myarrivals": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/posts/myarrivals.js"
     ],
-    "/posts/pointingpage": [
+    "/posts/myresum": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/posts/pointingpage.js"
+      "static/chunks/pages/posts/myresum.js"
     ]
   },
   "ampFirstPages": []
