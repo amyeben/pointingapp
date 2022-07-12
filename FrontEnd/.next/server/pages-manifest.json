@@ -2,10 +2,5 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/posts/chatbox": "pages/posts/chatbox.js",
-  "/login": "pages/login.js",
-  "/api/users/authenticate": "pages/api/users/authenticate.js",
-  "/posts/myarrivals": "pages/posts/myarrivals.js",
-  "/posts/myresum": "pages/posts/myresum.js",
   "/api/users": "pages/api/users.js"
 }

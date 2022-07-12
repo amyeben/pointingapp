@@ -39,7 +39,9 @@ origins = [
     "http://localhost:8000/get_all_date",
     "http://localhost:8000/get_all_data",
     "http://localhost:8000/get_advertissements",
-    "http://localhost:8000/get_all_advertissements"
+    "http://localhost:8000/get_all_advertissements",
+    "http://localhost:8000/get_chart_data",
+    "http://localhost:8000/get_chart_data_short"
 ]
 
 app = FastAPI()
@@ -52,6 +54,7 @@ app.add_middleware(
 )
 connect(db="pointingapp", host="localhost", port=27017)
 time_seven_hours = timedelta(seconds=28800)
+hundred_percent = timedelta(seconds=100)
 
 
 @app.post("/add_user", summary="Create an user")
@@ -174,7 +177,7 @@ async def departure_time(user_id: dict, date: dict, departuretime: dict, comment
 
     departure = Departuretime.objects(departuretime="", user_id=user_id["user_id"])
     resum = Resum.objects(departuretime="", user_id=user_id["user_id"])
-    if not departure or resum:
+    if not resum:
         resum = Resum.objects(date=date["date"], user_id=user_id["user_id"])
         resum = json.loads(resum.to_json())
         print(resum[0])
@@ -344,3 +347,93 @@ def get_time_passed(user_id, date):
     datetime2 = datetime.combine(datet, stop_time)
     time_passed = datetime2 - datetime1
     return time_passed
+
+
+@app.post("/get_chart_data", summary="For getting chart data")
+async def get_chart_data(username: dict):
+    tab_chart_data = []
+    label = []
+    dataset = []
+    user_id = users.get_user_id(username["name"])
+    user = Resum.objects(user_id=user_id)
+    usr = json.loads(user.to_json())
+    if user.count() > 7:
+        for i in range(7):
+            a = user.count() - 1
+            label.append(usr[a - i]['date'])
+            try:
+                dst = get_time_rate(user_id, usr[a - i]['date'])
+                if dst > hundred_percent:
+                    dst = 100
+            except:
+                dst = 0
+
+            dataset.append(dst)
+
+    else:
+        for j in range(7 - user.count()):
+            label.append('XX/XX/XXXX')
+            dataset.append(0)
+        for i in range(user.count()):
+            a = user.count() - 1
+            label.append(usr[a - i]['date'])
+            try:
+                dst = get_time_rate(user_id, usr[a - i]['date'])
+                if dst > hundred_percent:
+                    dst = 100
+            except:
+                dst = 0
+
+            dataset.append(dst)
+
+    tab_chart_data.append(label)
+    tab_chart_data.append(dataset)
+    return tab_chart_data
+
+
+@app.post("/get_chart_data_short", summary="For getting chart data")
+async def get_chart_data_short(username: dict):
+    tab_chart_data = []
+    label = []
+    dataset = []
+    user_id = users.get_user_id(username["name"])
+    user = Resum.objects(user_id=user_id)
+    usr = json.loads(user.to_json())
+    if user.count() > 4:
+        for i in range(4):
+            a = user.count() - 1
+            label.append(usr[a - i]['date'])
+            try:
+                dst = get_time_rate(user_id, usr[a - i]['date'])
+                if dst > hundred_percent:
+                    dst = 100
+            except:
+                dst = 0
+
+            dataset.append(dst)
+
+    else:
+        for j in range(4 - user.count()):
+            label.append('XX/XX/XXXX')
+            dataset.append(0)
+        for i in range(user.count()):
+            a = user.count() - 1
+            label.append(usr[a - i]['date'])
+            try:
+                dst = get_time_rate(user_id, usr[a - i]['date'])
+                if dst > hundred_percent:
+                    dst = 100
+            except:
+                dst = 0
+
+            dataset.append(dst)
+
+    tab_chart_data.append(label)
+    tab_chart_data.append(dataset)
+    return tab_chart_data
+
+
+def get_time_rate(user_id, date):
+    time_passed = get_time_passed(user_id, date)
+    rate = (time_passed * 100) / 28800
+    return rate

@@ -3,7 +3,7 @@ import Head from 'next/head'
 import Image from "next/image";
 import Link from "next/link";
 import Script from "next/script";
-import { FiMessageCircle } from '@react-icons/all-files/fi/FiMessageCircle';
+import { HiOutlineUser } from '@react-icons/all-files/hi/HiOutlineUser';
 import axios from 'axios'
 import {Nav} from "./Nav";
 import {userService} from "../services";
@@ -67,11 +67,12 @@ export default function Layout({ children }) {
                 <div className={styles.navlink}>
                     <ul>
                         <NavLink href={"/"}><li>Accueil</li></NavLink><br/>
+                        <NavLink href={"/posts/me"}><li>Mon Profil</li></NavLink><br/>
                         <NavLink href={"/posts/pointingpage"}><li>Pointage Horaire</li></NavLink><br/>
                         <NavLink href={"/posts/myarrivals"}><li>Mes Arrivées</li></NavLink><br/>
                         <NavLink href={"/posts/myresum"}><li>Mon Résumé</li></NavLink><br/>
                         <NavLink href={"/posts/alert"}><li>Avertissements</li></NavLink><br/>
-                        <NavLink href={"/posts/chatbox"}><li>Messagerie</li></NavLink><br/>
+
 
                     </ul>
                 </div>
@@ -108,7 +109,7 @@ export default function Layout({ children }) {
             <div className={styles.column}>
                 <nav className={styles.navwhite}>
                     <p> Bienvenue {nomduti} nous sommes le {datedujour}</p>
-                    <FiMessageCircle className={styles.message}/>
+                    <HiOutlineUser className={styles.message}/>
 
                 </nav>
                 <div className={styles.children}>{children}</div>

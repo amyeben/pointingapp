@@ -11,15 +11,71 @@ import axios from "axios";
 
 export default Home;
 
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Filler,
+    Legend,
+} from 'chart.js';
+import { Line, getDatasetAtEvent } from 'react-chartjs-2';
+import faker from 'faker';
+
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Filler,
+    Legend
+);
+
+export const options = {
+    maintainAspectRatio: false,
+    responsive: true,
+    plugins: {
+        legend: {
+            position: 'top' ,
+        },
+        title: {
+            display: false,
+            text: 'Ce graphique représente le taux de précense des 4 précédents jours pointés.',
+        },
+    },
+};
+
+const labels = ['XX/XX/XXXX', 'XX/XX/XXXX', 'XX/XX/XXXX', 'XX/XX/XXXX'];
+
+
+export const data = {
+    labels,
+    datasets: [
+        {
+            fill: true,
+            label: ' Taux de présence en % ',
+            data: [0, 0, 0, 0],
+            borderColor: 'rgb( 83, 108, 121  )',
+            backgroundColor: 'rgba(83, 108, 121 , 0.35)',
+        },
+    ],
+};
+
 function Home() {
     const [users, setUsers] = useState(null);
-    const router = useRouter();
+    const route = useRouter();
     const [user, setUser] = useState('');
     const [isButton, setButton] = useState(true);
     const [isButtonAd, setButtonAd] = useState(true);
     const [dataLoaded, setDataLoaded] = useState('');
     const [taBody, setTaBody] = useState('');
-    const [adContent, setAdContent] = useState('')
+    const [adContent, setAdContent] = useState('');
+    const [isButtonResum, setButtonResum] = useState(true)
 
     useEffect(() => {
         userService.getAll().then(x => setUsers(x));
@@ -48,8 +104,8 @@ function Home() {
             var ligneHtml = "";
             var red = "red";
 
-            if (res.data.length > 5){
-                for (let i = 0; i < 5; i++) {
+            if (res.data.length > 8){
+                for (let i = 0; i < 8; i++) {
                     if (res.data[i][4]==0 || res.data[i][4]=='0' ){
                         red = "green"
                     }
@@ -109,6 +165,34 @@ function Home() {
 
     }
 
+    const loadData  = (e) => {
+
+        setButtonResum(false)
+        const handleSuccess = (res) => { // if success
+            console.log(res.data);
+            console.log(res.data.length);
+            data.labels = res.data[0]
+            console.log(data.datasets[0].data)
+            data.datasets[0].data = res.data[1]
+            route.push('/')
+            setButtonAd(false)
+            loadDataAd(e)
+            console.log("Ok")
+
+        }
+
+        const handleFailure = (error) => {
+            console.log("ERROR");
+        }
+
+        axios.post(`http://localhost:8000/get_chart_data_short`, name)
+            .then(handleSuccess)
+            .catch(handleFailure)
+
+
+
+    }
+
 
 
     return (
@@ -141,14 +225,17 @@ function Home() {
                     <div className={styles.dep}>
                         <p>Mon Résumé</p>
                         <div className={styles.depcol}>
-                            <h3> GRAPHE EXEMPLE </h3>
+                            <Line options={options} data={data} width={50} height={150}/>
+                        </div>
+                        <div className={styles.btnresum}>
+                            <button className={isButtonResum ? styles.loadbuttonR : styles.hidden} onClick={loadData}>CHARGER</button>
                         </div>
                     </div>
                 </div>
                 <div className={styles.avertissements}>
                     <p>Avertissements</p>
                     <div className={styles.blue}>
-                        <button className={isButtonAd ? styles.loadbutton : styles.hidden} onClick={loadDataAd}>CHARGER</button>
+                        <button className={isButtonAd ? styles.loadbuttonA : styles.hidden} onClick={loadDataAd}>CHARGER</button>
                         <p className={isButtonAd ? styles.hidden : styles.nothing}>{adContent}</p>
                     </div>
                 </div>
