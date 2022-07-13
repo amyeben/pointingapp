@@ -52,7 +52,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-connect(db="pointingapp", host="localhost", port=27017)
+connect(host="mongodb+srv://amyeben:octopus95@pointingapp.zjax1wt.mongodb.net/pointingapp")
 time_seven_hours = timedelta(seconds=28800)
 hundred_percent = timedelta(seconds=100)
 
