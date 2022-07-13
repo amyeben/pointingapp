@@ -57,7 +57,7 @@ time_seven_hours = timedelta(seconds=28800)
 hundred_percent = timedelta(seconds=100)
 
 
-@app.post("/add_user", summary="Create an user")
+@app.post("/add_user", summary="Create an user", tags=["user"])
 async def add_user(user: NewUsers):
     """
         Create an user with all the information:
@@ -78,7 +78,7 @@ async def add_user(user: NewUsers):
     return {"message": "User added successfully"}
 
 
-@app.post("/add_resum", summary="Summary of the arrival time and departure time for each user", tags=["Resum"])
+@app.post("/add_resum", summary="Summary of the arrival time and departure time for each user", tags=["resum"])
 async def add_resum(resum: NewResum, user_id):
     """
     Summarize the arrival time and departure time of each user per day.
@@ -108,7 +108,7 @@ async def add_resum(resum: NewResum, user_id):
     return resum_dic
 
 
-@app.post("/arrival_time", summary="Add an arrival time document", tags=["Arrival Time"])
+@app.post("/arrival_time", summary="Add an arrival time document", tags=["arrival time"])
 async def arrival_time(user_id: dict, date: dict, arrivaltime: dict, comment: dict):
     """
     Add an arrival time document, with the following information :
@@ -160,7 +160,7 @@ async def arrival_time(user_id: dict, date: dict, arrivaltime: dict, comment: di
     return new_arr_dict
 
 
-@app.post("/departure_time", summary="Add a departure time document", tags=["Departure Time"])
+@app.post("/departure_time", summary="Add a departure time document", tags=["departure time"])
 async def departure_time(user_id: dict, date: dict, departuretime: dict, comment: dict):
     """
         Add a departure time document, with the following information :
@@ -214,37 +214,37 @@ async def update(user_id, comment):
     return arrivaltime_list
 
 
-@app.post("/ha", summary="Get the arrival time", tags=["Arrival Time"])
+@app.post("/ha", summary="Get the arrival time", tags=["arrival time"])
 async def get_ha(ha: dict):
     print(ha)
     ha_c = convert_hour(ha)
     return ha_c
 
 
-@app.post("/ha/comment", summary="Get the arrival time : comment", tags=["Arrival Time"])
+@app.post("/ha/comment", summary="Get the arrival time : comment", tags=["arrival time"])
 async def get_ha_comment(comment: dict):
     return comment["comment"]
 
 
-@app.post("/user_id", summary="Get the user and return an user_id", tags=["All"])
+@app.post("/user_id", summary="Get the user and return an user_id", tags=["user"])
 async def get_user(username: dict):
     user_id = users.get_user_id(username["name"])
     return user_id
 
 
-@app.post("/date", summary="Get the date", tags=["All"])
+@app.post("/date", summary="Get the date")
 async def get_date():
     return datetime.today().strftime('%d/%m/%Y')
 
 
-@app.post("/hd", summary="Get the departure time", tags=["Departure Time"])
+@app.post("/hd", summary="Get the departure time", tags=["departure time"])
 async def get_hd(hd: dict):
     print(hd)
     hd_c = convert_hour(hd)
     return hd_c
 
 
-@app.post("/hd/comment", summary="Get the departure time : comment", tags=["Departure Time"])
+@app.post("/hd/comment", summary="Get the departure time : comment", tags=["departure time"])
 async def get_hd_comment(comment: dict):
     return comment["comment"]
 
@@ -264,10 +264,10 @@ def convert_hour(str_hour: dict):
     return date_time_obj.time()
 
 
-@app.post("/get_all_myarrivals", summary="Get all data from database for the `Mes Arrivées` page")
+@app.post("/get_all_myarrivals", summary="Get all data from database for the `Mes Arrivées` page", tags=["arrival time"])
 async def get_all_date(username: dict):
     """
-    Load resum data from the database
+    Load resum's data from the database
     :param username: the user's name
     :return: An array who contains every resum's data of a user
     """
@@ -309,8 +309,13 @@ async def get_all_date(username: dict):
     return tab_all_data
 
 
-@app.post("/get_advertissements", summary="Get advertissements of user from database")
+@app.post("/get_advertissements", summary="Get advertissements of user from database", tags=["alert"])
 async def get_advertissments(username: dict):
+    """
+    Load alert from the database for the alert page
+    :param username: the current user
+    :return: alerts from database
+    """
     user_id = users.get_user_id(username['name'])
     usr_ad = Advertissement.objects(user_id=user_id)
     usr = json.loads(usr_ad.to_json())
@@ -319,8 +324,13 @@ async def get_advertissments(username: dict):
     return usr[len(usr) - 1]
 
 
-@app.post("/get_all_advertissements", summary="Get advertissements of user from database")
+@app.post("/get_all_advertissements", summary="Get advertissements of user from database", tags=["alert"])
 async def get_all_advertissments(username: dict):
+    """
+    Load alert from the database for the home page
+    :param username: the current user
+    :return: alerts from database
+    """
     user_id = users.get_user_id(username['name'])
     usr_ad = Advertissement.objects(user_id=user_id)
     usr = json.loads(usr_ad.to_json())
@@ -349,8 +359,13 @@ def get_time_passed(user_id, date):
     return time_passed
 
 
-@app.post("/get_chart_data", summary="For getting chart data")
+@app.post("/get_chart_data", summary="Collecting chart data", tags=["chart"])
 async def get_chart_data(username: dict):
+    """
+    Collect data from labels and data from database for the chart in the resum page
+    :param username: the current user
+    :return: An array who contains every resum's data for the chart
+    """
     tab_chart_data = []
     label = []
     dataset = []
@@ -391,8 +406,13 @@ async def get_chart_data(username: dict):
     return tab_chart_data
 
 
-@app.post("/get_chart_data_short", summary="For getting chart data")
+@app.post("/get_chart_data_short", summary="For getting chart data", tags=["chart"])
 async def get_chart_data_short(username: dict):
+    """
+    Collect data from labels and data from database for the chart in the home page
+    :param username: the current user
+    :return: An array who contains every resum's data for the chart in the home page
+    """
     tab_chart_data = []
     label = []
     dataset = []
@@ -434,6 +454,12 @@ async def get_chart_data_short(username: dict):
 
 
 def get_time_rate(user_id, date):
+    """
+    Get the rate of the time spent to the company
+    :param user_id: the current user id
+    :param date: the date we want the rate
+    :return: the rate
+    """
     time_passed = get_time_passed(user_id, date)
     rate = (time_passed * 100) / 28800
     return rate
