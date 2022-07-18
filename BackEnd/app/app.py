@@ -309,7 +309,7 @@ async def get_all_date(username: dict):
     return tab_all_data
 
 
-@app.post("/get_advertissements", summary="Get advertissements of user from database", tags=["alert"])
+@app.post("/get_advertissements", summary="Get alert of user from database", tags=["alert"])
 async def get_advertissments(username: dict):
     """
     Load alert from the database for the alert page
@@ -324,7 +324,7 @@ async def get_advertissments(username: dict):
     return usr[len(usr) - 1]
 
 
-@app.post("/get_all_advertissements", summary="Get advertissements of user from database", tags=["alert"])
+@app.post("/get_all_advertissements", summary="Get alert of user from database", tags=["alert"])
 async def get_all_advertissments(username: dict):
     """
     Load alert from the database for the home page

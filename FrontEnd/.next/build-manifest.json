@@ -30,10 +30,20 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/posts/alert": [
+    "/posts/me": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/posts/alert.js"
+      "static/chunks/pages/posts/me.js"
+    ],
+    "/posts/myarrivals": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/posts/myarrivals.js"
+    ],
+    "/posts/pointingpage": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/posts/pointingpage.js"
     ]
   },
   "ampFirstPages": []
