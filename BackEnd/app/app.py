@@ -14,9 +14,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from mongoengine import Document, StringField, IntField, ListField, EmailField, BooleanField, ReferenceField, DateField, \
     ObjectIdField, UUIDField, DateTimeField, EmbeddedDocument, EmbeddedDocumentField
 from pydantic import BaseModel, Field
-from models import Users, NewUsers, Resum, NewResum, Arrivaltime, NewArrivaltime, Departuretime, NewDeparturetime, \
+from .models import Users, NewUsers, Resum, NewResum, Arrivaltime, NewArrivaltime, Departuretime, NewDeparturetime, \
     Advertissement, NewAdvertissement
-from server import users
+from .server import users
 import asyncio
 
 origins = [
@@ -50,7 +50,7 @@ app.add_middleware(
     allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"],
+    allow_headers=["*"]
 )
 connect(host="mongodb+srv://amyeben:octopus95@pointingapp.zjax1wt.mongodb.net/pointingapp")
 time_seven_hours = timedelta(seconds=28800)

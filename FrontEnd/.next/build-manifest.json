@@ -30,10 +30,10 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/posts/me": [
+    "/login": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/posts/me.js"
+      "static/chunks/pages/login.js"
     ],
     "/posts/myarrivals": [
       "static/chunks/webpack.js",

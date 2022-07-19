@@ -2,7 +2,10 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/posts/me": "pages/posts/me.js",
+  "/posts/myarrivals": "pages/posts/myarrivals.js",
+  "/login": "pages/login.js",
   "/api/users": "pages/api/users.js",
-  "/posts/myarrivals": "pages/posts/myarrivals.js"
+  "/api/users/authenticate": "pages/api/users/authenticate.js",
+  "/posts/pointingpage": "pages/posts/pointingpage.js",
+  "/": "pages/index.js"
 }
