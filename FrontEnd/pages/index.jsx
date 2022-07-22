@@ -193,6 +193,12 @@ function Home() {
 
     }
 
+    window.addEventListener("beforeunload", (ev) =>
+    {
+        ev.preventDefault();
+        logout();
+    });
+
 
 
     return (

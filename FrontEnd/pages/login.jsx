@@ -18,7 +18,6 @@ export default function Login() {
             router.push('/');
         }
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // form validation rules

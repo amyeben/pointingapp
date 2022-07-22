@@ -5,7 +5,9 @@ import { Nav, RouteGuard } from 'components';
 
 export default App;
 
+
 function App({ Component, pageProps }) {
+
     return (
         <>
             <Head>

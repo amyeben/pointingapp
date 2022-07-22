@@ -35,11 +35,6 @@
       "static/chunks/main.js",
       "static/chunks/pages/login.js"
     ],
-    "/posts/myarrivals": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/posts/myarrivals.js"
-    ],
     "/posts/pointingpage": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
