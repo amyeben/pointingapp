@@ -6,18 +6,18 @@
 
 ## 🚀 Fonctionnalités
 
-✅ Enregistrement des entrées/sorties des employés 
-✅ Génération de rapports de pointage 
-✅ Gestion des utilisateurs et des droits d'accès 
-✅ Déploiement via **Docker** pour une installation simplifiée
+- ✅ Enregistrement des entrées/sorties des employés 
+- ✅ Génération de rapports de pointage 
+- ✅ Gestion des utilisateurs et des droits d'accès 
+- ✅ Déploiement via **Docker** pour une installation simplifiée
 
 ## 🏗️ Architecture du projet
 
-📂 **FrontEnd/** - Contient le visuel de l'application (NextJS, React)
-📂 **BackEnd/** - Contient l'API et la logique métier (Python, FastAPI) 
-📂 **.idea/** - Fichiers de configuration pour PyCharm (facultatif)
-📄 **launch.sh** - Script shell pour démarrer l'application 
-📄 **Dockerfile** - Conteneurisation du backend
+- 📂 **FrontEnd/** - Contient le visuel de l'application (NextJS, React)
+- 📂 **BackEnd/** - Contient l'API et la logique métier (Python, FastAPI) 
+- 📂 **.idea/** - Fichiers de configuration pour PyCharm (facultatif)
+- 📄 **launch.sh** - Script shell pour démarrer l'application 
+- 📄 **Dockerfile** - Conteneurisation du backend
 
 ## 🔧 Installation & Exécution
 
