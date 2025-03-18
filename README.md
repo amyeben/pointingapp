@@ -1,11 +1,65 @@
-# Pointing Application
+# 🕒 PointingApp - Application de Pointage
 
-This application allow us to point the arrival time and the departime time of persons. This application is not completed yet and correspond to the user's (employee) interface. 
+## 📌 Description
 
-This application is realised with NextJS a ReactJS Framework, FastAPI and MongoDB. At least, we can use them in local only. The API, and cluster DB are not deployed yet.
+**PointingApp** est une application permettant la gestion et le suivi des heures de travail des employés. Elle permet aux utilisateurs de pointer leurs heures d'arrivée et de départ, tout en offrant une interface de gestion pour les administrateurs.
 
-### Design of the application.
+## 🚀 Fonctionnalités
 
-The design was realised with Figma, the link is : https://www.figma.com/file/L6Q9G4wqbXj0atLjouX0hK/Pointing-Application---Users-Workspace?node-id=0%3A1
+✅ Enregistrement des entrées/sorties des employés ✅ Génération de rapports de pointage ✅ Gestion des utilisateurs et des droits d'accès ✅ Déploiement via **Docker** pour une installation simplifiée
 
-...
+## 🏗️ Architecture du projet
+
+📂 **BackEnd/** - Contient l'API et la logique métier (Python, FastAPI/Django/Flask ?) 📂 **.idea/** - Fichiers de configuration pour PyCharm (facultatif) 📄 **launch.sh** - Script shell pour démarrer l'application 📄 **Dockerfile** - Conteneurisation du backend
+
+## 🔧 Installation & Exécution
+
+### 1️⃣ Cloner le repository
+
+```bash
+git clone https://github.com/amyeben/pointingapp.git
+cd pointingapp
+```
+
+### 2️⃣ Installer les dépendances (si utilisation hors Docker)
+
+```bash
+pip install -r BackEnd/requirements.txt
+```
+
+### 3️⃣ Exécuter l'application
+
+#### 🐍 En local (sans Docker)
+
+```bash
+cd BackEnd
+python main.py  # À adapter selon le framework utilisé
+```
+
+#### 🐳 Avec Docker
+
+```bash
+docker build -t pointingapp ./BackEnd
+docker run -p 8000:8000 pointingapp
+```
+
+## 📜 API Endpoints (Exemples)
+
+| Méthode | Endpoint     | Description        |
+| ------- | ------------ | ------------------ |
+| GET     | `/employees` | Liste des employés |
+| POST    | `/clock-in`  | Pointer l'entrée   |
+| POST    | `/clock-out` | Pointer la sortie  |
+| GET     | `/reports`   | Générer un rapport |
+
+## 👨‍💻 Technologies utilisées
+
+- **Python** (Flask/FastAPI/Django ?) - Backend API
+- **Docker** - Déploiement en conteneur
+- **Shell Scripting** - Automatisation du lancement
+
+## 📬 Contact
+
+**Auteur** : Amy Eben Sang Kotta\
+📌 Retrouvez-moi sur [GitHub](https://github.com/amyeben) et [LinkedIn](https://linkedin.com/in/amy-eben) !
+
